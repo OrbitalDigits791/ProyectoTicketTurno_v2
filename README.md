@@ -1,12 +1,12 @@
-# Proyecto Ticket de Turno - Fase 1: Fundación
+# Proyecto Ticket de Turno
 
 ## Descripción
-Aplicación de escritorio desarrollada en C# con .NET Framework 4.8.1 para gestión de turnos escolares en el estado de Coahuila.
+Aplicación de escritorio desarrollada en C# con .NET Framework 4.8 para gestión de turnos escolares en el estado de Coahuila.
 
 **Fase Actual:** Fundación (Estructura Base + Entity Framework 6 + Repositorio Genérico)
 
 ## Especificaciones Técnicas
-- **Lenguaje:** C# con .NET Framework 4.8.1
+- **Lenguaje:** C# con .NET Framework 4.8
 - **ORM:** Entity Framework 6.4.4
 - **Base de Datos:** MS SQL Server 2019
 - **Arquitectura:** MVC + Repository Pattern
@@ -23,7 +23,7 @@ Aplicación de escritorio desarrollada en C# con .NET Framework 4.8.1 para gesti
 
 ### 1. Requisitos Previos
 - Visual Studio 2019 o superior
-- .NET Framework 4.8.1 SDK (Target Framework)
+- .NET Framework 4.8 SDK (Target Framework)
 - SQL Server 2019 Developer Edition
 
 ### 2. Restaurar Dependencias
