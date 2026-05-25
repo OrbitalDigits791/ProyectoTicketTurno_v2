@@ -1,0 +1,11 @@
+Índice				Tabla			Columnas			Propósito
+idx_Est_Nombre			Estudiantes		Nombre			Búsqueda por nombre (requisito 6)
+idx_Est_ApellidoPaterno		Estudiantes		ApellidoPaterno		Búsqueda por apellido (requisito 6)
+idx_Est_Municipio		Estudiantes		MunicipioEstudio		Análisis por municipio
+idx_Est_NivelEducativo		Estudiantes		IdNivelEducativo		Consultas por nivel educativo
+idx_Sol_CURP			SolicitudesTurno		CURP			Búsqueda de solicitudes por alumno
+idx_Sol_Municipio		SolicitudesTurno		IdMunicipio		Consultas por municipio
+idx_Sol_Asunto			SolicitudesTurno		IdAsunto			Análisis de asuntos frecuentes
+idx_Sol_FechaSolicitud		SolicitudesTurno		FechaSolicitud		Reportes por período
+idx_Sol_Estatus			SolicitudesTurno		Estatus			Dashboard (filtro por estatus)
+idx_Sol_Municipio_Estatus		SolicitudesTurno		IdMunicipio, Estatus	Composite - Dashboard por municipio
