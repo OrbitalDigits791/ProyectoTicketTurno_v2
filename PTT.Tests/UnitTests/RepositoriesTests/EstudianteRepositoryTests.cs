@@ -13,20 +13,40 @@ namespace PTT.Tests.UnitTests.RepositoriesTests
 {
     public class EstudianteRepositoryTests
     {
-        private AplicacionDbContext GetContext()
+        private AplicacionDbContext GetInMemoryContext()
         {
             return new AplicacionDbContext();
         }
 
         [Fact]
-        public void ObtenerPorCURP_NoDebeLanzarExcepcion()
+        public void ObtenerPorCURP_ConCURPValido_DebeRetornarEstudiante()
         {
-            using (var context = GetContext())
-            {
-                var repository = new EstudianteRepository(context);
-                var resultado = repository.ObtenerPorCURP("GAJL000515HCLRPN01");
-                Assert.True(resultado == null || resultado.CURP != null);
-            }
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new EstudianteRepository(context);
+            var curp = "ABCD123456HDFMNN01";
+
+            // Act
+            var resultado = repository.ObtenerPorCURP(curp);
+
+            // Assert
+            // En una BD vacía, puede ser null; en una con datos, será una colección
+            Assert.NotNull(resultado);
+        }
+
+        [Fact]
+        public void ObtenerPorCURP_ConCURPInvalido_DebeRetornarVacio()
+        {
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new EstudianteRepository(context);
+            var curp = "CURP_INEXISTENTE";
+
+            // Act
+            var resultado = repository.ObtenerPorCURP(curp);
+
+            // Assert
+            Assert.Empty((System.Collections.IEnumerable)resultado);
         }
     }
 }

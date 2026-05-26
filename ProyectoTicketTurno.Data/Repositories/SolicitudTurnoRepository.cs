@@ -18,7 +18,7 @@ namespace ProyectoTicketTurno.Data.Repositories
 
         public IEnumerable<SolicitudTurno> ObtenerPorMunicipio(int idMunicipio)
         {
-            return ObtenerPor(s => s.IdMunicipio == idMunicipio);
+            return ObtenerPor(s => s.IdMunicipio == idMunicipio);  //Usa IdMunicipio (int)
         }
 
         public IEnumerable<SolicitudTurno> ObtenerPorCURP(string curp)
@@ -26,14 +26,9 @@ namespace ProyectoTicketTurno.Data.Repositories
             return ObtenerPor(s => s.CURP == curp);
         }
 
-        public IEnumerable<SolicitudTurno> ObtenerPorEstatus(string estatus)
+        public IEnumerable<SolicitudTurno> ObtenerPorEstatus(string estatus)  //string, no enum
         {
             return ObtenerPor(s => s.Estatus == estatus);
-        }
-
-        public IEnumerable<SolicitudTurno> ObtenerPorAsunto(int idAsunto)
-        {
-            return ObtenerPor(s => s.IdAsunto == idAsunto);
         }
     }
 }

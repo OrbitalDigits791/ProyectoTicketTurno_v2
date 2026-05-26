@@ -2,190 +2,149 @@
 using System.Collections.Generic;
 using ProyectoTicketTurno.Business.Models;
 
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ProyectoTicketTurno.Infrastructure.Utilities
 {
     public static class FormatoCURPHelper
     {
-        private static readonly Dictionary<string, string> AbreviaturasPorEstado = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, string> AbreviaturasPorEstado = new Dictionary<string, string>
         {
-            { "AGUASCALIENTES", "AS" }, { "BAJA CALIFORNIA", "BC" }, { "BAJA CALIFORNIA SUR", "BS" },
-            { "CAMPECHE", "CC" }, { "COAHUILA", "CL" }, { "COLIMA", "CM" }, { "CHIAPAS", "CS" },
-            { "CHIHUAHUA", "CH" }, { "CIUDAD DE MEXICO", "DF" }, { "DISTRITO FEDERAL", "DF" },
-            { "DURANGO", "DG" }, { "GUANAJUATO", "GT" }, { "GUERRERO", "GR" }, { "HIDALGO", "HG" },
-            { "JALISCO", "JC" }, { "MEXICO", "MC" }, { "MICHOACAN", "MN" }, { "MORELOS", "MS" },
-            { "NAYARIT", "NT" }, { "NUEVO LEON", "NL" }, { "OAXACA", "OC" }, { "PUEBLA", "PL" },
-            { "QUERETARO", "QT" }, { "QUINTANA ROO", "QR" }, { "SAN LUIS POTOSI", "SP" },
-            { "SINALOA", "SL" }, { "SONORA", "SR" }, { "TABASCO", "TC" }, { "TAMAULIPAS", "TS" },
-            { "TLAXCALA", "TL" }, { "VERACRUZ", "VZ" }, { "YUCATAN", "YN" }, { "ZACATECAS", "ZS" },
-            { "NACIDO EN EL EXTRANJERO", "NE" }, { "EXTRANJERO", "NE" }
+            { "Aguascalientes", "AGS" },
+            { "Baja California", "BC" },
+            { "Baja California Sur", "BCS" },
+            { "Campeche", "CAMP" },
+            { "Coahuila", "CL" },
+            { "Colima", "COL" },
+            { "Chiapas", "CHIS" },
+            { "Chihuahua", "CHIH" },
+            { "Ciudad de México", "CDMX" },
+            { "Durango", "DGO" },
+            { "Guanajuato", "GTO" },
+            { "Guerrero", "GRO" },
+            { "Hidalgo", "HGO" },
+            { "Jalisco", "JAL" },
+            { "México", "MEX" },
+            { "Michoacán", "MICH" },
+            { "Morelos", "MOR" },
+            { "Nayarit", "NAY" },
+            { "Nuevo León", "NL" },
+            { "Oaxaca", "OAX" },
+            { "Puebla", "PUE" },
+            { "Querétaro", "QRO" },
+            { "Quintana Roo", "QROO" },
+            { "San Luis Potosí", "SLP" },
+            { "Sinaloa", "SIN" },
+            { "Sonora", "SON" },
+            { "Tabasco", "TAB" },
+            { "Tamaulipas", "TAMS" },
+            { "Tlaxcala", "TLAX" },
+            { "Veracruz", "VER" },
+            { "Yucatán", "YUC" },
+            { "Zacatecas", "ZAC" }
         };
 
-        private static readonly HashSet<string> EstadosValidos = new HashSet<string>(AbreviaturasPorEstado.Values);
-
-        public static string GenerarCURP(
-            string nombre,
-            string apellidoPaterno,
-            string apellidoMaterno,
-            DateTime fechaNacimiento,
-            char sexo,
-            string abreviaturaEstado)
+        /// <summary>
+        /// Genera un CURP basado en los datos del estudiante
+        /// </summary>
+        public static string GenerarCURP(string nombre, string apellidoPaterno, string apellidoMaterno,
+            DateTime fechaNacimiento, char sexo, string abreviaturaEstado)
         {
-            if (string.IsNullOrWhiteSpace(nombre) ||
-                string.IsNullOrWhiteSpace(apellidoPaterno) ||
+            if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(apellidoPaterno) ||
                 string.IsNullOrWhiteSpace(apellidoMaterno))
-            {
-                return string.Empty;
-            }
-
-            string n = Limpiar(nombre);
-            string ap = Limpiar(apellidoPaterno);
-            string am = Limpiar(apellidoMaterno);
-            string estado = Limpiar(abreviaturaEstado);
-            char sx = char.ToUpperInvariant(sexo);
-
-            if (n.Length == 0 || ap.Length == 0 || am.Length == 0)
                 return string.Empty;
 
-            if (sx != 'H' && sx != 'M')
-                return string.Empty;
+            // Primeras 4 letras: 1ª del apellido paterno, 1ª del materno, 1ª del nombre, 1ª consonante del apellido paterno
+            string parte1 = apellidoPaterno.Substring(0, 1) +
+                           apellidoMaterno.Substring(0, 1) +
+                           nombre.Substring(0, 1) +
+                           ObtenerPrimeraConsonante(apellidoPaterno);
 
-            if (estado.Length != 2)
-                estado = "NE";
-
-            string parte1 = $"{ap[0]}{ObtenerPrimeraVocalInterna(ap)}{am[0]}{n[0]}";
+            // Fecha: YYMMDD
             string parte2 = fechaNacimiento.ToString("yyMMdd");
-            string parte3 = sx.ToString();
-            string parte4 = estado;
-            string parte5 = $"{ObtenerPrimeraConsonanteInterna(ap)}{ObtenerPrimeraConsonanteInterna(am)}{ObtenerPrimeraConsonanteInterna(n)}";
-            string parte6 = GenerarHomoclaveBasica();
 
-            return (parte1 + parte2 + parte3 + parte4 + parte5 + parte6).ToUpperInvariant();
+            // Sexo: H o M
+            string parte3 = sexo.ToString().ToUpper();
+
+            // Abreviatura del estado (2 caracteres)
+            string parte4 = abreviaturaEstado.Length >= 2 ? abreviaturaEstado.Substring(0, 2) : "XX";
+
+            // Últimas 3 letras: consonantes del apellido paterno, materno y nombre
+            string consonante1 = ObtenerPrimeraConsonante(apellidoPaterno);
+            string consonante2 = ObtenerPrimeraConsonante(apellidoMaterno);
+            string consonante3 = ObtenerPrimeraConsonante(nombre);
+            string parte5 = (consonante1 + consonante2 + consonante3).ToUpper();
+
+            // Últimos 2 caracteres: secuencial (00-99)
+            string parte6 = "01";
+
+            return (parte1 + parte2 + parte3 + parte4 + parte5 + parte6).ToUpper();
         }
 
+        /// <summary>
+        /// Valida el formato del CURP (18 caracteres, formato válido)
+        /// </summary>
         public static bool ValidarFormatoCURP(string curp)
         {
-            if (string.IsNullOrWhiteSpace(curp))
+            if (string.IsNullOrWhiteSpace(curp) || curp.Length != 18)
                 return false;
 
-            string valor = curp.Trim().ToUpperInvariant();
-
-            if (valor.Length != 18)
-                return false;
-
-            bool estructuraValida = Regex.IsMatch(
-                valor,
-                @"^[A-Z][AEIOUX][A-Z]{2}\d{6}[HM][A-Z]{2}[B-DF-HJ-NP-TV-Z]{3}[A-Z0-9]{2}$");
-
-            if (!estructuraValida)
-                return false;
-
-            string entidad = valor.Substring(11, 2);
-            return EstadosValidos.Contains(entidad);
+            return Regex.IsMatch(curp, @"^[A-Z]{4}\d{6}[HM][A-Z]{2}[A-Z]{3}[A-Z0-9]{2}$");
         }
 
-        public static bool ValidarFormatoCURP(
-            string curp,
-            string nombre,
-            string apellidoPaterno,
-            string apellidoMaterno,
-            DateTime fechaNacimiento,
-            char sexo,
-            string abreviaturaEstado)
+        /// <summary>
+        /// Valida el CURP completo (formato + coherencia con datos personales)
+        /// </summary>
+        public static bool ValidarFormatoCURP(string curp, string nombre, string apellidoPaterno,
+            string apellidoMaterno, DateTime fechaNacimiento, char sexo, string abreviaturaEstado)
         {
+            // Validar formato básico
             if (!ValidarFormatoCURP(curp))
                 return false;
 
-            string esperado = GenerarCURP(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, sexo, abreviaturaEstado);
-            if (string.IsNullOrWhiteSpace(esperado) || esperado.Length != 18)
-                return false;
+            // Generar CURP esperado
+            string curpEsperado = GenerarCURP(nombre, apellidoPaterno, apellidoMaterno,
+                fechaNacimiento, sexo, abreviaturaEstado);
 
-            string actual = curp.Trim().ToUpperInvariant();
-
-            // Compara primeros 16 (sin homoclave final aleatoria)
-            return actual.Substring(0, 16) == esperado.Substring(0, 16);
+            // Comparar (sin considerar los últimos 2 dígitos que son secuenciales)
+            return curp.Substring(0, 16) == curpEsperado.Substring(0, 16);
         }
 
+        /// <summary>
+        /// Obtiene la primera consonante de una palabra
+        /// </summary>
+        private static string ObtenerPrimeraConsonante(string palabra)
+        {
+            if (string.IsNullOrWhiteSpace(palabra))
+                return "X";
+
+            string vocales = "AEIOUÁÉÍÓÚ";
+            foreach (char c in palabra.ToUpper())
+            {
+                if (!vocales.Contains(c.ToString()))
+                    return c.ToString();
+            }
+
+            return "X";
+        }
+
+        /// <summary>
+        /// Obtiene la abreviatura de un estado
+        /// </summary>
         public static string ObtenerAbreviaturaPorEstado(string estado)
         {
-            if (string.IsNullOrWhiteSpace(estado))
-                return "NE";
-
-            string limpio = Limpiar(estado);
-            return AbreviaturasPorEstado.TryGetValue(limpio, out var abreviatura) ? abreviatura : "NE";
+            return AbreviaturasPorEstado.TryGetValue(estado, out var abreviatura) ? abreviatura : "XX";
         }
 
-        // Mantengo el nombre actual para no romper llamadas existentes
+        /// <summary>
+        /// Formatea el CURP con guiones para legibilidad
+        /// </summary>
         public static string FormattearCURP(string curp)
         {
             if (string.IsNullOrWhiteSpace(curp) || curp.Length != 18)
                 return curp;
 
-            string valor = curp.ToUpperInvariant();
-            return $"{valor.Substring(0, 4)}-{valor.Substring(4, 6)}-{valor.Substring(10, 3)}-{valor.Substring(13, 5)}";
-        }
-
-        private static string Limpiar(string valor)
-        {
-            if (string.IsNullOrWhiteSpace(valor))
-                return string.Empty;
-
-            string normalizado = valor.Trim().ToUpperInvariant().Normalize(NormalizationForm.FormD);
-            var sb = new StringBuilder();
-
-            foreach (char c in normalizado)
-            {
-                var cat = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (cat != UnicodeCategory.NonSpacingMark && (char.IsLetterOrDigit(c) || c == ' '))
-                {
-                    sb.Append(c);
-                }
-            }
-
-            return sb.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        private static char ObtenerPrimeraVocalInterna(string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto) || texto.Length < 2)
-                return 'X';
-
-            for (int i = 1; i < texto.Length; i++)
-            {
-                char c = texto[i];
-                if ("AEIOU".Contains(c))
-                    return c;
-            }
-
-            return 'X';
-        }
-
-        private static char ObtenerPrimeraConsonanteInterna(string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto) || texto.Length < 2)
-                return 'X';
-
-            for (int i = 1; i < texto.Length; i++)
-            {
-                char c = texto[i];
-                if (char.IsLetter(c) && !"AEIOU".Contains(c))
-                    return c;
-            }
-
-            return 'X';
-        }
-
-        private static string GenerarHomoclaveBasica()
-        {
-            const string alfanumerico = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            return new string(Enumerable.Range(0, 2)
-                .Select(_ => alfanumerico[random.Next(alfanumerico.Length)])
-                .ToArray());
+            return $"{curp.Substring(0, 4)}-{curp.Substring(4, 6)}-{curp.Substring(10, 3)}-{curp.Substring(13)}";
         }
     }
 }

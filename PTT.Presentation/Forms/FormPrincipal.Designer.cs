@@ -1,6 +1,4 @@
 ﻿
-using System;
-
 namespace PTT.Presentation.Forms
 {
     partial class FormPrincipal
@@ -95,11 +93,6 @@ namespace PTT.Presentation.Forms
             this.Load += new System.EventHandler(this.FormPrincipal_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-        }
-
-        internal void Show()
-        {
-            throw new NotImplementedException();
         }
 
         private System.Windows.Forms.Button buttonRegistrarEstudiante;
