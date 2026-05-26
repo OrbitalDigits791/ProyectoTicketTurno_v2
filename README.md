@@ -42,7 +42,7 @@
 | **Lenguaje** | C# con .NET Framework 4.8 |
 | **ORM** | Entity Framework 6.4.4 |
 | **Base de Datos** | MS SQL Server 2019+ |
-| **Arquitectura** | MVC + Repository Pattern |
+| **Arquitectura** | FACTORY + Repository Pattern |
 | **Interfaz de Usuario** | Windows Forms (WinForms) |
 | **Patrón de Datos** | Generic Repository Pattern |
 | **Testing** | MSTest / NUnit |
