@@ -13,33 +13,73 @@ namespace PTT.Tests.UnitTests.RepositoriesTests
 {
     public class SolicitudTurnoRepositoryTests
     {
-        private AplicacionDbContext GetContext()
+        private AplicacionDbContext GetInMemoryContext()
         {
             return new AplicacionDbContext();
         }
 
         [Fact]
-        public void ObtenerPorEstatus_DebeRetornarColeccion()
+        public void ObtenerPorNumeroTurno_ConNumeroValido_DebeRetornarSolicitud()
         {
-            using (var context = GetContext())
-            {
-                var repository = new SolicitudTurnoRepository(context);
-                var resultado = repository.ObtenerPorEstatus("Pendiente");
-                Assert.NotNull(resultado);
-                Assert.IsAssignableFrom<IEnumerable<SolicitudTurno>>(resultado);
-            }
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new SolicitudTurnoRepository(context);
+            int numeroTurno = 1;
+
+            // Act
+            var resultado = repository.ObtenerPorNumeroTurno(numeroTurno);
+
+            // Assert
+            // En una BD vacía será null; en una con datos, será un objeto
+            Assert.IsAssignableFrom<SolicitudTurno>(resultado);
         }
 
         [Fact]
-        public void ObtenerPorAsunto_DebeRetornarColeccion()
+        public void ObtenerPorEstatus_ConEstatusValido_DebeRetornarLista()
         {
-            using (var context = GetContext())
-            {
-                var repository = new SolicitudTurnoRepository(context);
-                var resultado = repository.ObtenerPorAsunto(1);
-                Assert.NotNull(resultado);
-                Assert.IsAssignableFrom<IEnumerable<SolicitudTurno>>(resultado);
-            }
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new SolicitudTurnoRepository(context);
+            string estatus = "Pendiente";
+
+            // Act
+            var resultado = repository.ObtenerPorEstatus(estatus);
+
+            // Assert
+            Assert.NotNull(resultado);
+            Assert.IsAssignableFrom<IEnumerable<SolicitudTurno>>(resultado);
+        }
+
+        [Fact]
+        public void ObtenerPorMunicipio_ConIdValido_DebeRetornarLista()
+        {
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new SolicitudTurnoRepository(context);
+            int idMunicipio = 1;
+
+            // Act
+            var resultado = repository.ObtenerPorMunicipio(idMunicipio);
+
+            // Assert
+            Assert.NotNull(resultado);
+            Assert.IsAssignableFrom<IEnumerable<SolicitudTurno>>(resultado);
+        }
+
+        [Fact]
+        public void ObtenerPorCURP_ConCURPValido_DebeRetornarLista()
+        {
+            // Arrange
+            var context = GetInMemoryContext();
+            var repository = new SolicitudTurnoRepository(context);
+            string curp = "ABCD123456HDFMNN01";
+
+            // Act
+            var resultado = repository.ObtenerPorCURP(curp);
+
+            // Assert
+            Assert.NotNull(resultado);
+            Assert.IsAssignableFrom<IEnumerable<SolicitudTurno>>(resultado);
         }
     }
 }

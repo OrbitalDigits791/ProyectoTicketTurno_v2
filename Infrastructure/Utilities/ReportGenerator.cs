@@ -10,13 +10,8 @@ namespace ProyectoTicketTurno.Infrastructure.Utilities
             if (solicitud == null || estudiante == null || municipio == null)
                 return "Error: Datos insuficientes para generar comprobante.";
 
-            string nivelEducativoNombre = estudiante.NivelEducativo != null
-                ? estudiante.NivelEducativo.Nombre
-                : "N/A";
-
-            string asuntoDescripcion = (solicitud.Asunto != null && !string.IsNullOrWhiteSpace(solicitud.Asunto.Descripcion))
-                ? solicitud.Asunto.Descripcion
-                : $"Asunto #{solicitud.IdAsunto}";
+            // Obtener nombre del nivel educativo si está disponible
+            string nivelEducativoNombre = estudiante.NivelEducativo != null ? estudiante.NivelEducativo.Nombre : "N/A";
 
             string comprobante = $@"
 ================================================================================
@@ -37,7 +32,7 @@ Datos del Estudiante:
 Datos de la Solicitud:
     Número de Turno: {solicitud.NumeroTurno}
     Municipio: {municipio.Nombre}
-    Asunto a Tratar: {asuntoDescripcion}
+    Asunto a Tratar: {solicitud.Asunto}
     Persona que Realiza el Trámite: {solicitud.PersonaTramitera}
     Parentesco: {solicitud.Parentesco}
     Fecha de Solicitud: {solicitud.FechaSolicitud:dd/MM/yyyy HH:mm:ss}

@@ -54,17 +54,13 @@
     <Compile Include="Context\AplicacionDbContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\AsuntoRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\EstudianteRepository.cs" />
-    <Compile Include="Repositories\IAsuntoRepository.cs" />
     <Compile Include="Repositories\IEstudianteRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\ISolicitudTurnoRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\SolicitudTurnoRepository.cs" />
-    <Compile Include="Repositories\IAsuntoRepository.cs" />
-    <Compile Include="Repositories\AsuntoRepository.cs" />  
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
