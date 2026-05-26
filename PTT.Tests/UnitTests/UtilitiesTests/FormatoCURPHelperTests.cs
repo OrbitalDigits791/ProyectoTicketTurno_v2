@@ -12,56 +12,34 @@ namespace PTT.Tests.UnitTests.UtilitiesTests
     public class FormatoCURPHelperTests
     {
         [Fact]
-        public void GenerarCURP_ConDatosValidos_DebeRetornarCURPValido()
+        public void GenerarCURP_DebeRetornar18Caracteres()
         {
-            // Arrange
-            string nombre = "Juan";
-            string apellidoPaterno = "García";
-            string apellidoMaterno = "López";
-            DateTime fechaNacimiento = new DateTime(2000, 5, 15);
-            char sexo = 'H';
-            string abreviaturaEstado = "CO";
+            var curp = FormatoCURPHelper.GenerarCURP(
+                "Juan", "Garcia", "Lopez",
+                new DateTime(2000, 5, 15), 'H', "CL");
 
-            // Act
-            var resultado = FormatoCURPHelper.GenerarCURP(nombre, apellidoPaterno, apellidoMaterno,
-                fechaNacimiento, sexo, abreviaturaEstado);
-
-            // Assert
-            Assert.NotNull(resultado);
-            Assert.Equal(18, resultado.Length); // CURP debe tener 18 caracteres
+            Assert.False(string.IsNullOrWhiteSpace(curp));
+            Assert.Equal(18, curp.Length);
         }
 
         [Fact]
-        public void ValidarFormatoCURP_ConCURPValido_DebeRetornarTrue()
+        public void ValidarFormatoCURP_ConFormatoInvalido_DebeRetornarFalse()
         {
-            // Arrange
-            string curp = "GAJL000515HDFMNN01";
-            string nombre = "Juan";
-            string apellidoPaterno = "García";
-            string apellidoMaterno = "López";
-            DateTime fechaNacimiento = new DateTime(2000, 5, 15);
-            char sexo = 'H';
-            string abreviaturaEstado = "CO";
-
-            // Act
-            var resultado = FormatoCURPHelper.ValidarFormatoCURP(curp, nombre, apellidoPaterno,
-                apellidoMaterno, fechaNacimiento, sexo, abreviaturaEstado);
-
-            // Assert
-            Assert.True(resultado || !resultado); // Placeholder
+            Assert.False(FormatoCURPHelper.ValidarFormatoCURP("INVALID"));
         }
 
         [Fact]
-        public void ValidarFormatoCURP_ConCURPInvalido_DebeRetornarFalse()
+        public void ValidarFormatoCURP_CoherenteConDatos_DebeRetornarTrue()
         {
-            // Arrange
-            string curp = "INVALID";
+            var curp = FormatoCURPHelper.GenerarCURP(
+                "Juan", "Garcia", "Lopez",
+                new DateTime(2000, 5, 15), 'H', "CL");
 
-            // Act
-            var resultado = FormatoCURPHelper.ValidarFormatoCURP(curp, "", "", "", DateTime.Now, 'H', "CO");
+            var valido = FormatoCURPHelper.ValidarFormatoCURP(
+                curp, "Juan", "Garcia", "Lopez",
+                new DateTime(2000, 5, 15), 'H', "CL");
 
-            // Assert
-            Assert.False(resultado);
+            Assert.True(valido);
         }
     }
 }

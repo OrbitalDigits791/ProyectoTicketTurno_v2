@@ -11,23 +11,26 @@ namespace ProyectoTicketTurno.Business.Models
         public DateTime FechaNacimiento { get; set; }
         public char Sexo { get; set; }
         public int Edad { get; set; }
-        public int IdEstadoNacimiento { get; set; }
-        public int IdMunicipioEstudio { get; set; }
-        public string TelefonoContacto { get; set; }
-        public int IdNivelEducativo { get; set; }
-        public int Grado { get; set; }
-        public DateTime FechaRegistro { get; set; }
-        public bool Activo { get; set; }
 
-        //Propiedades de Navegación
-        public virtual Estado EstadoNacimiento { get; set; }
-        public virtual Municipio MunicipioEstudio { get; set; }
+        // FK a Estados.Clave (columna: EstadoNacimiento)
+        public string EstadoNacimiento { get; set; }
+
+        // FK a Municipios.IdMunicipio (columna: MunicipioEstudio)
+        public int MunicipioEstudio { get; set; }
+
+        public int IdNivelEducativo { get; set; }
+        public byte Grado { get; set; }
+        public string TelefonoContacto { get; set; }
+        public DateTime FechaRegistro { get; set; }
+
+        // Navegacion
+        public virtual Estado EstadoNacimientoEntidad { get; set; }
+        public virtual Municipio MunicipioEstudioEntidad { get; set; }
         public virtual NivelEducativo NivelEducativo { get; set; }
 
         public Estudiante()
         {
             FechaRegistro = DateTime.Now;
-            Activo = true;
         }
     }
 }
