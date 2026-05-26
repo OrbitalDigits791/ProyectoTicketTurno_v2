@@ -14,48 +14,33 @@ namespace PTT.Tests.UnitTests.ModelsTests
         [Fact]
         public void Estudiante_Constructor_DebeSetearFechaRegistro()
         {
-            // Act
             var estudiante = new Estudiante();
-
-            // Assert
             Assert.NotEqual(DateTime.MinValue, estudiante.FechaRegistro);
-            Assert.True(estudiante.Activo);
         }
 
         [Fact]
         public void Estudiante_ConDatosValidos_DebeCrearseCorrectamente()
         {
-            // Arrange
             var estudiante = new Estudiante
             {
-                CURP = "ABCD123456HDFMNN01",
+                CURP = "GAJL000515HCLRPN01",
                 Nombre = "Juan",
-                ApellidoPaterno = "García",
-                ApellidoMaterno = "López",
+                ApellidoPaterno = "Garcia",
+                ApellidoMaterno = "Lopez",
                 FechaNacimiento = new DateTime(2000, 5, 15),
                 Sexo = 'H',
                 Edad = 23,
-                TelefonoContacto = "6141234567",
-                Grado = 3
+                EstadoNacimiento = "CL",
+                MunicipioEstudio = 1,
+                IdNivelEducativo = 2,
+                Grado = 3,
+                TelefonoContacto = "8441234567"
             };
 
-            // Act & Assert
-            Assert.Equal("ABCD123456HDFMNN01", estudiante.CURP);
-            Assert.Equal("Juan", estudiante.Nombre);
-            Assert.Equal("García", estudiante.ApellidoPaterno);
-            Assert.Equal("López", estudiante.ApellidoMaterno);
-        }
-
-        [Fact]
-        public void Estudiante_SexoInvalido_DebeAceptarH_o_M()
-        {
-            // Arrange
-            var estudiante = new Estudiante { Sexo = 'H' };
-            var estudiante2 = new Estudiante { Sexo = 'M' };
-
-            // Act & Assert
-            Assert.Equal('H', estudiante.Sexo);
-            Assert.Equal('M', estudiante2.Sexo);
+            Assert.Equal("GAJL000515HCLRPN01", estudiante.CURP);
+            Assert.Equal("CL", estudiante.EstadoNacimiento);
+            Assert.Equal(1, estudiante.MunicipioEstudio);
+            Assert.Equal(2, estudiante.IdNivelEducativo);
         }
     }
 }

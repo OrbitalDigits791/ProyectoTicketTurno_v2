@@ -1,8 +1,12 @@
 ﻿namespace ProyectoTicketTurno.Business.Models
 {
-    public class NivelEducativo
+     public class NivelEducativo
     {
-        public int IdNivel { get; set; }
+        // PK: NivelesEducativos.IdNivelEducativo
+        public int IdNivelEducativo { get; set; }
+
         public string Nombre { get; set; }
+
+        public string Descripcion { get; set; }
     }
 }

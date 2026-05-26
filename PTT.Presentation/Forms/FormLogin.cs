@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.Configuration;
+using PTT.Presentation.Security;
+
 namespace PTT.Presentation.Forms
 {
     public partial class FormLogin : Form
@@ -19,28 +22,37 @@ namespace PTT.Presentation.Forms
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-            this.Text = "Login - Proyecto Ticket de Turno";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            Text = "Login - Proyecto Ticket de Turno";
+            StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            string usuario = textBoxUsuario.Text;
-            string contraseña = textBoxContraseña.Text;
+            string usuario = textBoxUsuario.Text?.Trim();
+            string password = textBoxContraseña.Text ?? string.Empty;
 
-            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(contraseña))
+            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Por favor ingrese usuario y contraseña", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor ingrese usuario y contraseña.", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // TODO: Validar credenciales contra BD
-            MessageBox.Show("Login exitoso", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string adminUsuario = ConfigurationManager.AppSettings["AdminUsuario"] ?? "admin";
+            string adminPassword = ConfigurationManager.AppSettings["AdminPassword"] ?? "Admin123*";
 
-            // Abrir FormPrincipal
+            if (!usuario.Equals(adminUsuario, StringComparison.OrdinalIgnoreCase) || password != adminPassword)
+            {
+                MessageBox.Show("Credenciales inválidas.", "Acceso denegado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            SesionAplicacion.IniciarSesion(usuario);
+
             FormPrincipal formPrincipal = new FormPrincipal();
             formPrincipal.Show();
-            this.Hide();
+            Hide();
         }
 
         private void buttonSalir_Click(object sender, EventArgs e)

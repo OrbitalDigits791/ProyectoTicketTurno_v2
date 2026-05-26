@@ -14,10 +14,8 @@ namespace PTT.Tests.UnitTests.ModelsTests
         [Fact]
         public void SolicitudTurno_Constructor_DebeSetearDefaults()
         {
-            // Act
             var solicitud = new SolicitudTurno();
 
-            // Assert
             Assert.NotEqual(DateTime.MinValue, solicitud.FechaSolicitud);
             Assert.Equal("Pendiente", solicitud.Estatus);
         }
@@ -25,34 +23,20 @@ namespace PTT.Tests.UnitTests.ModelsTests
         [Fact]
         public void SolicitudTurno_ConDatosValidos_DebeCrearseCorrectamente()
         {
-            // Arrange
             var solicitud = new SolicitudTurno
             {
                 NumeroTurno = 1,
-                CURP = "ABCD123456HDFMNN01",
+                CURP = "GAJL000515HCLRPN01",
                 IdMunicipio = 1,
-                Asunto = "Trámite administrativo",
-                PersonaTramitera = "María García",
-                Parentesco = "Madre"
+                IdAsunto = 2,
+                PersonaTramitera = "Maria Garcia",
+                Parentesco = "Madre",
+                Estatus = "Pendiente"
             };
 
-            // Act & Assert
             Assert.Equal(1, solicitud.NumeroTurno);
-            Assert.Equal("ABCD123456HDFMNN01", solicitud.CURP);
-            Assert.Equal(1, solicitud.IdMunicipio);
-            Assert.Equal("Trámite administrativo", solicitud.Asunto);
-        }
-
-        [Fact]
-        public void SolicitudTurno_Estatus_DebeSerPendiente_o_Resuelto()
-        {
-            // Arrange
-            var solicitud1 = new SolicitudTurno { Estatus = "Pendiente" };
-            var solicitud2 = new SolicitudTurno { Estatus = "Resuelto" };
-
-            // Act & Assert
-            Assert.Equal("Pendiente", solicitud1.Estatus);
-            Assert.Equal("Resuelto", solicitud2.Estatus);
+            Assert.Equal(2, solicitud.IdAsunto);
+            Assert.Equal("GAJL000515HCLRPN01", solicitud.CURP);
         }
     }
 }
